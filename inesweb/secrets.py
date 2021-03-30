@@ -1,0 +1,1 @@
+S_KEY = '61*6^cl+#d^%n1&k#+j**!&k6v*u-m%mkm(@*r=+9ju8waf=m^'

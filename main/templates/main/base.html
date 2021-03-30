@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+    <title>Ines Casamayou</title>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <!--div class="logo-container">
+                <img class='lkmi-logo' src="{% static 'imgs/lkmi-logo-grey.png' %}"/>
+            </div-->
+            <a href="/"><h2 class='web-title'>Inés<br>Casamayou</h2></a>
+        </div>
+        <div class="content">
+            {% block content %}
+
+            {% endblock content %}
+        </div>
+        <div class="footer">
+            <div class="logo-container">
+                <img class='lkmi-logo' src="{% static 'imgs/lkmi-logo-grey.png' %}"/>
+            </div>
+            <div class="contact_info">
+                <p>Contacto</p>
+                <p>Tel: +(598) 91 403 950</p>
+                <p>ines@casamayou.net</p>
+            </div>
+            
+        </div>
+    </div> 
+</body>
+</html>

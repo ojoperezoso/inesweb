@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <div class="my_presentation">
+        <div class="avatar"></div>
+        <h1 style="text-align: center;">Esta página está en construcción...</h1>
+        <!--p>Estudio el movimiento y la conciencia de hace 20 años, bla bla bla, taichi, bla bla psicomotricidad, digitopuntura, bla bla, etc...</p-->
+    </div>
+        {% if post_list %}
+            {% for post in post_list %}
+                <div class="listed_post">
+                    <a href='post/{{post.slug}}'><h3>{{post.title}}</h3></a>
+                    <p class="description">{{post.description}}</p>
+                    <p class="date">{{post.publish_date}}</p>
+                </div>
+            {% endfor %}    
+        {% endif %}
+        
+{% endblock content %}
+    

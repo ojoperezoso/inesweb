@@ -1,0 +1,131 @@
+
+{% extends 'main/base.html' %}
+
+
+{% block content %}
+    <div class="detailed_post">
+        
+        {% if post.post_type != "Promocional" %}
+            <h2 class="title">{{post.title}}</h2>    
+        {% endif %}
+        
+        {% if post.content %}
+            <div class="post_content">
+                {{post.content|linebreaks}}
+            </div>
+        {% endif %}
+            
+                
+        {% if audio %}
+            <div class="audio_list">
+                {% if audio|length >= 3 %}
+                    <h1>Audios</h1>   
+                {% endif %}
+                <div class="audio_container">
+                    {% for a in audio %}        
+                        {% if a.local == True %}
+                            <audio controls src="{{a.content.url}}" type="audio/mpeg">
+                            </audio>    
+                        {% else %}
+                            <audio controls src="{{a.source}}" type="audio/mpeg">
+                            </audio>
+                        {% endif %}
+                        
+                        {% if a.description != '' %}
+                            <p>{{a.description}}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+            
+        {% if video %}
+            
+            {% if video|length >= 3 %}
+                <h1>Videos</h1>    
+            {% endif %}
+            <div class="video_list">
+                {% for v in video %}
+                    <div class="video_container">
+                        {% if v.local == True %}
+                            <iframe width="420" height="345" src="{{v.content.url}}">
+                            </iframe>
+                        {% else %}
+                            <iframe class="video" src="{{v.source}}">
+                            </iframe>
+                        {% endif %}
+            
+                        {% if v.description != '' %}
+                            <p>{{v.description}}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}    
+            </div>
+        {% endif %}
+            
+        {% if image %}
+            {% if post.post_type == "Promocional" %}
+                <h1>Clases semanales por Zoom</h1>
+            {% endif %}
+            <div class="image_list">
+            {% for i in image %}
+                    {% if i.title == 'semanal' %}
+                        <div class="image_container">
+                        {% if i.local == True %}
+                            <img class="centered" src="{{i.content.url}}">
+                        {% else %}
+                            <img class="centered" src="{{i.source}}">
+                        {% endif %}
+                        
+                        {% if i.description != '' %}
+                            {{i.description|linebreaks}}
+                        {% endif %}
+                        </div>
+                    
+                    {% endif %}
+                {% endfor %}
+            </div>
+            
+            {% if post.post_type == "Promocional" %}
+                <h1>Talleres</h1>
+            {% endif %}
+            {% if post.post_type != "Promocional" and image|length >= 3 %}
+                <h1>Imágenes</h1>    
+            {% endif %}
+            <div class="image_list">
+                {% for i in image %} 
+                    {% if i.title != 'semanal' %}
+                        <div class="image_container">
+                            {% if post.post_type != "Promocional" %}
+                                {% if i.local == True %}
+                                    <img class="centered" src="{{i.content.url}}">
+                                {% else %}
+                                    <img class="centered" src="{{i.source}}">
+                                {% endif %}
+                            {% else %}
+                                {% if i.local == True %}
+                                    <img src="{{i.content.url}}">
+                                {% else %}
+                                    <img src="{{i.source}}">
+                                {% endif %}
+                            {% endif %}
+                                
+                            {% if i.description != '' %}
+                                {{i.description|linebreaks}}
+                            {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            </div>        
+        {% endif %}
+        {% if post.post_type != "Promocional" %}
+            <p class="date">Publicado: {{post.publish_date}}</p>
+            
+            {% if post.post_type == "Publicacion Temporal" %}
+                <p class="date">Finaliza: {{post.end_date}}</p>
+            {% endif %}
+                
+        {% endif %}
+        
+    </div>    
+{% endblock content %}
