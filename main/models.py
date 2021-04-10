@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
+from urllib.parse import urlparse, parse_qs
 import datetime, uuid
+
 # Create your models here.
 
 
@@ -36,13 +38,37 @@ class Media(Content):
     local = models.BooleanField('Archivo Local', default=True)
     content = models.FileField('Contenido', upload_to='local/', max_length=100,blank=True)
     source = models.URLField('Link', max_length=200,blank=True)
+    
     class Meta:
         verbose_name = 'Archivo Interno'
         verbose_name_plural = 'Arhivos Internos'
 
+    def extract_video_id(self, url):
+        # Examples:
+        # - http://youtu.be/SA2iWivDJiE
+        # - http://www.youtube.com/watch?v=_oPAwA_Udwc&feature=feedu
+        # - http://www.youtube.com/embed/SA2iWivDJiE
+        # - http://www.youtube.com/v/SA2iWivDJiE?version=3&amp;hl=en_US
+        query = urlparse(url)
+        if query.hostname == 'youtu.be': return query.path[1:]
+        if query.hostname in {'www.youtube.com', 'youtube.com'}:
+            if query.path == '/watch': return parse_qs(query.query)['v'][0]
+            if query.path[:7] == '/embed/': return query.path.split('/')[2]
+            if query.path[:3] == '/v/': return query.path.split('/')[2]
+        # fail?
+        return None
+
     def __str__(self):
         return f'{self.data_type}, {self.title}'
 
+    def save(self, *args, **kwargs):
+        if not self.local:
+            if self.data_type == 'Video':
+                video_id = self.extract_video_id(self.source)
+                new_source = (f'https://www.youtube.com/embed/{video_id}')
+                if self.source != new_source: 
+                    self.source = new_source
+        super().save(*args, **kwargs)
 
 class Post(Content):
     POST_TYPES = [
@@ -90,13 +116,14 @@ class Post(Content):
         self.publish()
         super(Post, self).save(*args, **kwargs)
 
+"""
 class SectionedPost(Content):
     POST_TYPES = [
         ('Publicacion','Publicacion'),
         ('Publicacion Temporal','Publicacion Temporal'),
         ('Promocional','Promocional')
     ]
-    """Model definition for Post."""
+
     post_type = models.CharField('Tipo de Post', max_length= 50,choices=POST_TYPES, default='Publicacion')
     days = models.SmallIntegerField('Dias Habiles', default=0)
     visible = models.BooleanField('Visible', default=True)
@@ -120,7 +147,7 @@ class Section(models.Model):
         ('Texto','Texto'),
         ('Media','Media')
     ]
-    """Model definition for Section."""
+
     item_type = models.CharField('Tipo', max_length=50, choices=ITEM_TYPES, default='Texto')
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
     texto = models.TextField('Texto')
@@ -135,7 +162,7 @@ class SectionItem(models.Model):
         ('Texto','Texto'),
         ('Media','Media')
     ]
-    """Model definition for Section."""
+
     item_type = models.CharField('Tipo', max_length=50, choices=ITEM_TYPES, default='Texto')
     section_id = models.ForeignKey(Section, on_delete=models.CASCADE)
     texto = models.TextField('Texto')
@@ -147,4 +174,4 @@ class SectionItem(models.Model):
 
     def __str__(self):
         return f'Content: {self.post_id}'
-
+"""

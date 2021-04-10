@@ -272,7 +272,15 @@ body {
 
 
 
+/******************************************************************************/
+
+
+
 @media only screen and (max-width: 600px) {
+    body {
+        width: 100%;
+        height: 100%;
+    }
     p {
         width: 90%;
         margin: auto;
@@ -289,6 +297,7 @@ body {
     .footer .logo-container {
         width: 150px;
         height:63.5px;
+        padding: 0;
         padding-top: var(--distance-short);
         float: none;
         margin: auto;
@@ -326,14 +335,21 @@ body {
     .detailed_post audio {
         width: 100%;
     }
+    .detailed_post .video_list {
+        width: 100%;
+    }
     .detailed_post .video-container {
         margin: auto;
         width: 100%;
     }
-    
     .detailed_post .video_container .video {
         width: 250px;
         height: 205px;        
+    }
+    .detailed_post .video_container p {
+        padding: 0;
+        padding-top: var(--distance-medium);
+        padding-bottom: var(--distance-medium);
     }
     
     .detailed_post .image_container {
